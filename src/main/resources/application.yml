@@ -1,0 +1,5 @@
+spring:
+  profiles:
+    active:
+     - dev
+# -dev 파일을 찾아 설정 진행
