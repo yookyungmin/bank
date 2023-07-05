@@ -15,6 +15,7 @@ import shop.mtcoding.bank.handler.ex.CustomApiException;
 
 import java.util.Optional;
 
+import static shop.mtcoding.bank.dto.user.UserRespDto.*;
 import static shop.mtcoding.bank.dto.user.userReqDto.*;
 
 @Service
@@ -27,9 +28,9 @@ public class UserService {
 
     //서비스는 DTO로 요청 받고 DTO로 응답
     @Transactional
-    public UserRespDto.JoinRespDto 회원가입(JoinReqDto joinReqDto){
+    public JoinRespDto 회원가입(JoinReqDto joinReqDto){
         //1. 동일 유저네임 문제 검사
-        Optional<User> userOp = userRepository.findbyUsername(joinReqDto.getUsername());
+        Optional<User> userOp = userRepository.findByUsername(joinReqDto.getUsername());
         if(userOp.isPresent()){
             //유저네임 중복
             throw new CustomApiException("동일한 username이 존재합니다");
@@ -39,7 +40,7 @@ public class UserService {
         //persistence컨텍스트에 들어갔다온거라 ps를 붙임
 
         //3.dto 응답
-        return new UserRespDto.JoinRespDto(userPS);
+        return new JoinRespDto(userPS);
     }
 
 

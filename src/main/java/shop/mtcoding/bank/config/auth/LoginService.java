@@ -19,7 +19,7 @@ public class LoginService implements UserDetailsService {
     //체크해서 없으면 오류, 있으면 정상적으로 시큐리티 컨텍스트 내부 세션에 로그인 된 세션이 만들어진다.
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User userPS = userRepository.findbyUsername(username).orElseThrow(
+        User userPS = userRepository.findByUsername(username).orElseThrow(
                 () -> new InternalAuthenticationServiceException("인증실패")
                 //시큐리티를 타고 있을때 username을 못찾으면 new Internal~ 얘로 제어를해줘야 한다. 시큐리티를 타고 있을떈 제어권이 없기 떄문
                 //나중에 테스트할때 설명 예정

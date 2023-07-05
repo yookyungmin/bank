@@ -52,7 +52,7 @@ public class UserServiceTest extends DummyObject {
         joinReqDto.setFullname("썰");
 
         //stub 1 //가정법, 가설  //어떤걸 실행하면 어떤게 리턴되는지
-        when(userRepository.findbyUsername(any())).thenReturn(Optional.empty());
+        when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
         //when(userRepository.findbyUsername(any())).thenReturn(Optional.of(new User()));
 
 

@@ -18,7 +18,7 @@ public class LoginUser implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
 
-        authorities.add(() -> "ROLE_" + user.getRole());
+        authorities.add(() -> "ROLE_" + user.getRole()); //Role 넣는과정
         return authorities;
     }
 
