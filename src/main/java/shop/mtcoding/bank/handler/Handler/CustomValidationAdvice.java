@@ -34,9 +34,9 @@ public class CustomValidationAdvice {
 
             for(Object arg : args){
                 if(arg instanceof BindingResult){ //BindingResult를 상속받거나 인스턴스면
-                    BindingResult bindingResult = (BindingResult) arg;
+                    BindingResult bindingResult = (BindingResult) arg; //형변환
 
-                    if(bindingResult.hasErrors()){
+                    if(bindingResult.hasErrors()){ //bindingresult에 에러가 있으면
                         Map<String, String> errorMap = new HashMap<>();
 
                         for(FieldError error : bindingResult.getFieldErrors()){

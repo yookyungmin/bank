@@ -1,5 +1,6 @@
 package shop.mtcoding.bank.config.auth;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,7 +9,7 @@ import shop.mtcoding.bank.domain.user.User;
 import java.util.ArrayList;
 import java.util.Collection;
 
-
+@Getter
 @RequiredArgsConstructor
 public class LoginUser implements UserDetails {
 
@@ -18,7 +19,7 @@ public class LoginUser implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
 
-        authorities.add(() -> "ROLE_" + user.getRole()); //Role 넣는과정
+        authorities.add(() -> "ROLE_" + user.getRole()); //Role 넣는과정, 람다식
         return authorities;
     }
 

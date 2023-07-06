@@ -7,13 +7,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import shop.mtcoding.bank.config.jwt.JwtAuthenticationFilter;
 import shop.mtcoding.bank.domain.user.UserEnum;
 import shop.mtcoding.bank.dto.ResponseDto;
 import shop.mtcoding.bank.util.CustomReponseUtil;
@@ -31,6 +35,14 @@ public class SecurityConfig {
     }
 
     //추후 jwt 필터 등록 필요
+    public class CustomSecurityFilterManager extends AbstractHttpConfigurer<CustomSecurityFilterManager, HttpSecurity>{
+        @Override
+        public void configure(HttpSecurity builder) throws Exception {
+            AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
+            builder.addFilter(new JwtAuthenticationFilter(authenticationManager)); //강제 세션 로그인을 위해 AuthenticationManager 필요
+            super.configure(builder);
+        }
+    }
 
     //jwt 서버를 만들 예정 Session 사용안함
     @Bean
@@ -45,10 +57,13 @@ public class SecurityConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         //react, 앱 같은데서 요청을 받을거라 form로그인 방식 x
-        http.formLogin().disable();
+        http.formLogin().disable(); //비허용
 
         //브라우저가 팝업창을 이용해서 사용자 인증을 진행한다.
-        http.httpBasic().disable();
+        http.httpBasic().disable(); //비허용
+
+        // 필터 적용
+        http.apply(new CustomSecurityFilterManager());
 
         //Exception 가로채기
         http.exceptionHandling().authenticationEntryPoint((request, response,outhException)->{//commence 메서드의 매개변수
@@ -58,7 +73,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests()
                 .antMatchers("/api/s/**").authenticated()//인증이 필요한 부분
-                .antMatchers("/api/admin/**").hasRole(""+ UserEnum.ADMIN)//최근 공식문서는 ROLE_안붙여도됨
+                .antMatchers("/api/admin/**").hasRole(""+ UserEnum.ADMIN)//최근 공식문서는 ROLE_안붙여도됨  //prefix
                 .anyRequest().permitAll(); //나머지 요청 모두 허용
 
         return http.build();
