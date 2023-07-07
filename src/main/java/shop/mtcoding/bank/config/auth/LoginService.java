@@ -24,7 +24,8 @@ public class LoginService implements UserDetailsService {
         User userPS = userRepository.findByUsername(username).orElseThrow(
                 () -> new InternalAuthenticationServiceException("인증실패")
                 //시큐리티를 타고 있을때 username을 못찾으면 new Internal~ 얘로 제어를해줘야 한다. 시큐리티를 타고 있을떈 제어권이 없기 떄문
-                //나중에 테스트할때 설명 예정
+                //컨트롤러까지 도달이 안된 상태라 customexceptionhandler로 관리를 못한다
+                //unsuccessfulAuthentication() 얘가 처리
         );
 
         return new LoginUser(userPS); //username을 찾으면 userPS를 담아서 세션에 만들어진다

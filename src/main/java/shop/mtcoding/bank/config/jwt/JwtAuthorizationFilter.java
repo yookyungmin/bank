@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-//모든 주소에서 동작함(토큰검증)
+//모든 주소에서 동작함(토큰검증) 인가 필터
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager) {
@@ -33,10 +33,18 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             //UserDetails 타입 or username) 을 넣을수 있는데 NULL이기떄문에  loginUser = userdetails 통쨰로 넣음
             //임시 세션 만들기기//토큰도 있고 검증도 되었으니 인증된 유저로 보면 된다 // 강제로 토큰에 세션을 만든다
             Authentication authentication = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
+            //id랑 roll만 존재
 
             SecurityContextHolder.getContext().setAuthentication(authentication); //강제 로그인
+            //stateless 정책때문에 SecurityContextHolder 에 로그인하면서 loginUser가 저장되더있던게 사라져 있기떄문에 다시 생성하는 과정
+            //세션에 인증과 권한 체크용으로만 저장을 하고 응답을 하면 사라진다.
+            // /api/s/hello 면 인증인지 확인만 하면 되고 /api/admin/hello는 권한체크까지 해야하기 때문에
 
-            //필터를 다 타면 컨트롤러로가낟
+            //세션은 브라우저를 안끄거나 로그아웃을 안하면 원래 유지가 됨
+
+
+            //필터를 다 타면 Dispatcher Servlet을 갔다가 컨트롤러로 간다
+
 
         } //SecurityConfig 의 jwt 필터 등록 필요
 

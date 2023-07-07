@@ -12,7 +12,7 @@ import shop.mtcoding.bank.handler.ex.CustomApiException;
 import shop.mtcoding.bank.handler.ex.CustomForbiddenException;
 import shop.mtcoding.bank.handler.ex.CustomValidationException;
 
-@RestControllerAdvice
+@RestControllerAdvice  //디스패쳐 서블릿 이후에 동작하는 애들
 public class CustomExceptionHandler {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
