@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -14,10 +15,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import shop.mtcoding.bank.config.jwt.JwtAuthenticationFilter;
+import shop.mtcoding.bank.config.jwt.JwtAuthorizationFilter;
 import shop.mtcoding.bank.domain.user.UserEnum;
 import shop.mtcoding.bank.dto.ResponseDto;
 import shop.mtcoding.bank.util.CustomReponseUtil;
@@ -40,6 +43,7 @@ public class SecurityConfig {
         public void configure(HttpSecurity builder) throws Exception {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
             builder.addFilter(new JwtAuthenticationFilter(authenticationManager)); //강제 세션 로그인을 위해 AuthenticationManager 필요
+            builder.addFilter(new JwtAuthorizationFilter(authenticationManager));
             super.configure(builder);
         }
     }
@@ -65,11 +69,16 @@ public class SecurityConfig {
         // 필터 적용
         http.apply(new CustomSecurityFilterManager());
 
-        //Exception 가로채기
+        //인증실패
         http.exceptionHandling().authenticationEntryPoint((request, response,outhException)->{//commence 메서드의 매개변수
-            CustomReponseUtil.unAuthentiaction(response, "로그인을 진행해주세요");
+            CustomReponseUtil.fail(response, "로그인 실패", HttpStatus.UNAUTHORIZED);
         });
         //postman에서 에러 나오는걸 통제하기위해 AuthenticationEntryPoint의 제어권을 뱻는다
+
+        //권한 실패
+        http.exceptionHandling().accessDeniedHandler((request, response, e)->{
+            CustomReponseUtil.fail(response, "권한이 없습니다", HttpStatus.FORBIDDEN);
+        });
 
         http.authorizeHttpRequests()
                 .antMatchers("/api/s/**").authenticated()//인증이 필요한 부분

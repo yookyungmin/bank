@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import shop.mtcoding.bank.domain.user.User;
 import shop.mtcoding.bank.domain.user.UserRepository;
 
-@Service
+//시큐리티 설정에서 loginProcessingUrl("/login")
+//login 요청이 오면 자동으로 UserDetailService타입으로 Ioc되어 있는 loadUserByUsername 함수 실행
+@Service //UserDetailsService . 유저의 정보를 가져오는 인터페이스이다
 public class LoginService implements UserDetailsService {
 
     @Autowired

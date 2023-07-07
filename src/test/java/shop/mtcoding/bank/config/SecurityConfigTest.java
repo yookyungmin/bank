@@ -40,7 +40,7 @@ public class SecurityConfigTest {
         System.out.println("테스트="+responseBody);
 
         //then
-        assertThat(httpStatusCode).isEqualTo("401");
+        assertThat(httpStatusCode).isEqualTo(401);
     }
 
     @Test

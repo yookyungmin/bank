@@ -3,6 +3,7 @@ package shop.mtcoding.bank.config.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,7 +51,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     loginReqDto.getUsername(), loginReqDto.getPassword());  //토큰 생성
 
             //UserDetailService 의 LoadUserByUsername을 호출
-            //JWT를 쓴다 하더라도 컨트롤러 진입을 하면 시큐리티의 권한체크 인증체크의 도움을 받을 수 있게 세션을 만든다.
+            //JWT를 쓴다 하더라도 컨트롤러 진입을 하면 시큐리티의 권한체크 인증체크의 도움을 받을 수 있게 세션을 만든다.//인증이 되고 세션은 만들어지자마자
+            // CustomReponseUtil.success(response, loginRespDto);에 의해 리턴되며 컨트롤러까지 안가고 없어진다 //
             // 이세션의 유효기간은 request하고 response하면 끝
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             //Authentication은 authenticationManager 매니저가 필요하다
@@ -67,7 +69,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     //로그인 실패
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        CustomReponseUtil.unAuthentiaction(response, "로그인 실패");
+        CustomReponseUtil.fail(response, "로그인 실패", HttpStatus.UNAUTHORIZED);
     }
 
     //return authentication이 잘 작동하면 successfulAuthentication 호출
