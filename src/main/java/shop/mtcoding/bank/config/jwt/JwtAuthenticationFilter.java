@@ -76,22 +76,19 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         5. 없으면 unsuccessfulAuthentication() 실행 (컨트롤러까지 도달이 안된상태라),
         6. 있으면 단순히 LoginUser 객체 생성하고 리턴
         7. 시큐리티 전용 세션에 담김.(전체 세션의 SecurityContextHolder 부분만 Authtication에 LoginUser를 담는다)authentication.getPrincipal()
-        8. JWT 토큰을 생성하고 response 헤더에 담는다. successfulAuthentication()
+        8. JWT 토큰을 생성하고 response 응답 헤더에 담는다. successfulAuthentication()
         //response되면 세션에 저장된건 사라진다 stateless정책을 사용해서
 
-     ==== 클라이언트가 JWT토큰을 갖는다.
+     ====클라이언트가 헤더에 JWT를 갖고 있지만 SecurityContextHolder에는 LoginUser 정보가 사라진 상태
 
-          //api/s/hello
+          //api/s/hello / /api/admin/hello
           1. BAF 동작, 토큰 검증
-            //stateless 정책때문에 SecurityContextHolder 에 로그인하면서 loginUser가 저장되더있던게 사라져 있기떄문에 다시 생성하는 과정
+          2. 토큰이 존재하면 접두사 제거
+          3. stateless 정책때문에 SecurityContextHolder 에 로그인하면서 loginUser가 저장되더있던게 사라져 있기떄문에 authentication 객체 강제로 생성
+          4. authentication객체를 SecurityContextHolder에 담아준다
             //세션에 인증과 권한 체크용으로만 저장을 하고 응답을 하면 사라진다.
             // /api/s/hello 면 인증인지 확인만 하면 되고 /api/admin/hello는 권한체크까지 해야하기 때문에
-
-
-
      */
-
-
 
     //로그인 실패
     @Override
