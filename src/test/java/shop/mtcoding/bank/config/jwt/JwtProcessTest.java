@@ -18,9 +18,10 @@ public class JwtProcessTest {
 
         //givem
         User user = User.builder().id(1L).role(UserEnum.ADMIN).build(); //유저 객체 만들기
-        //create 할떄 LoginUser가 필요하기 떄문에
+        //create 할떄 LoginUser가 필요하기 떄문에, LoginUser는 user필요
 
         LoginUser loginUser = new LoginUser(user);
+
         //when
         String jwtToken = JwtProcess.create(loginUser);
         System.out.println("jwtToken = " + jwtToken +" 어디까지야");
