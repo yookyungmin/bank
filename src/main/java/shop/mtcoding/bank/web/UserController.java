@@ -4,21 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import shop.mtcoding.bank.domain.user.UserService;
+import shop.mtcoding.bank.service.UserService;
 import shop.mtcoding.bank.dto.ResponseDto;
-import shop.mtcoding.bank.dto.user.UserRespDto;
-import shop.mtcoding.bank.dto.user.userReqDto;
 
 import javax.validation.Valid;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static shop.mtcoding.bank.dto.user.UserRespDto.*;
 import static shop.mtcoding.bank.dto.user.userReqDto.*;

@@ -1,4 +1,4 @@
-package shop.mtcoding.bank.domain.user;
+package shop.mtcoding.bank.service;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shop.mtcoding.bank.domain.user.User;
+import shop.mtcoding.bank.domain.user.UserRepository;
 import shop.mtcoding.bank.dto.user.UserRespDto;
 import shop.mtcoding.bank.dto.user.userReqDto;
 import shop.mtcoding.bank.handler.ex.CustomApiException;
@@ -42,8 +44,4 @@ public class UserService {
         //3.dto 응답
         return new JoinRespDto(userPS);
     }
-
-
-
-
 }

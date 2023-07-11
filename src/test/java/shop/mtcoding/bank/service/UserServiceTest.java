@@ -1,30 +1,22 @@
 package shop.mtcoding.bank.service;
 
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import shop.mtcoding.bank.config.dummy.DummyObject;
 import shop.mtcoding.bank.domain.user.User;
-import shop.mtcoding.bank.domain.user.UserEnum;
 import shop.mtcoding.bank.domain.user.UserRepository;
-import shop.mtcoding.bank.domain.user.UserService;
-import shop.mtcoding.bank.dto.user.UserRespDto;
-import shop.mtcoding.bank.dto.user.userReqDto;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static shop.mtcoding.bank.domain.user.UserService.*;
 import static shop.mtcoding.bank.dto.user.UserRespDto.*;
 import static shop.mtcoding.bank.dto.user.userReqDto.*;
 

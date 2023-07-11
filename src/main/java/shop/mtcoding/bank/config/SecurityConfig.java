@@ -71,8 +71,10 @@ public class SecurityConfig {
 
         //인증실패
         http.exceptionHandling().authenticationEntryPoint((request, response,outhException)->{//commence 메서드의 매개변수
-            CustomReponseUtil.fail(response, "로그인 실패", HttpStatus.UNAUTHORIZED);
+            CustomReponseUtil.fail(response, "로그인을 진행해주세요", HttpStatus.UNAUTHORIZED);
         });
+        //여기서 터지면 Authorization 인가는 통과했다는 뜻
+        //헤더에 jwt토큰이 없어도 dofilter를 통해서 컨트롤러까지 갔다가 해당 코드가 낚아챔
         //postman에서 에러 나오는걸 통제하기위해 AuthenticationEntryPoint의 제어권을 뱻는다
 
         //권한 실패

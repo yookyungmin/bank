@@ -32,7 +32,7 @@ public class UserControllerTest extends DummyObject {
     private ObjectMapper om;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @BeforeEach
     public void setUp(){
