@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import shop.mtcoding.bank.domain.user.User;
+import shop.mtcoding.bank.handler.ex.CustomApiException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -52,6 +53,18 @@ public class Account {
         this.user = user;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    //Lazy 로딩이어도 id를 조회할때는 select 쿼리가 날아가지 않는다.
+    //Lazy 로딩 할땐 persist context에 있으면 쿼리를 날리지 않는다.
+    public void checkOwner(Long userId){
+        
+        String testUserName = user.getUsername();
+        System.out.println("테스트 = " + testUserName);
+        
+        if(user.getId() != userId){
+            throw new CustomApiException("계좌 소유자가 아닙니다.");
+        }
     }
 }
 

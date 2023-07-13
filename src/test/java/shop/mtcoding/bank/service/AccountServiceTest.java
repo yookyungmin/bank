@@ -2,6 +2,7 @@ package shop.mtcoding.bank.service;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,10 +14,13 @@ import shop.mtcoding.bank.domain.account.Account;
 import shop.mtcoding.bank.domain.account.AccountRepository;
 import shop.mtcoding.bank.domain.user.User;
 import shop.mtcoding.bank.domain.user.UserRepository;
+import shop.mtcoding.bank.handler.ex.CustomApiException;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static shop.mtcoding.bank.dto.account.AccountReqDto.AccountSaveReqDto;
@@ -65,5 +69,24 @@ public class AccountServiceTest extends DummyObject {
 
         //then
         assertThat(accountSaveRespDto.getNumber()).isEqualTo(1111L);
+    }
+
+    @Test
+    public void 계좌삭제_test() throws Exception{
+
+        //given
+        Long number = 1111L;
+        Long userId = 2L;
+
+        //stub //무언갈 기대한다 리턴이 있을시
+        User saar = newMockUser(1L, "saarr", "쌀");
+        Account saarAccount = newMockAccount(1L, 1111L, 1000L, saar);
+
+        when(accountRepository.findByNumber(any())).thenReturn(Optional.of(saarAccount));
+        //saaAccount 리턴을 가정
+
+        //when
+        assertThrows(CustomApiException.class, ()->accountService.계좌삭제(number, userId));
+        //Exception이 발생하면 정상
     }
 }
