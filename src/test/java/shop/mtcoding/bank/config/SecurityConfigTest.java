@@ -7,6 +7,8 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -16,6 +18,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 //@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 //@SpringBootTest
 
+@Sql("classpath:db/teardown.sql") //롤백이 아닌 truncate하기 위함 drop으로하면 create도 되기 떄문에 truncate
+@ActiveProfiles("test") //없으면 dev로 설정된곳에서 saar이 생성되고 테스트시에 존재하는 유저 오류가 뜬다, 근데 없어도 teardown때문에 오류는 안뜸하지만 고정
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class SecurityConfigTest {

@@ -13,9 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JwtProcessTest {
 
-    @Test
-    public void create_test() throws Exception{
 
+    private String createToken(){
         //givem
         User user = User.builder().id(1L).role(UserEnum.ADMIN).build(); //유저 객체 만들기
         //create 할떄 LoginUser가 필요하기 떄문에, LoginUser는 user필요
@@ -24,6 +23,20 @@ public class JwtProcessTest {
 
         //when
         String jwtToken = JwtProcess.create(loginUser);
+
+        return jwtToken;
+    }
+    @Test
+    public void create_test() throws Exception{
+
+        //givem
+//        User user = User.builder().id(1L).role(UserEnum.ADMIN).build(); //유저 객체 만들기
+//        //create 할떄 LoginUser가 필요하기 떄문에, LoginUser는 user필요
+//
+//        LoginUser loginUser = new LoginUser(user);
+
+        //when
+        String jwtToken = createToken();
         System.out.println("jwtToken = " + jwtToken +" 어디까지야");
 
         //then
@@ -33,7 +46,9 @@ public class JwtProcessTest {
     @Test
     public void verify_test() throws  Exception{
         //given
-        String jwtToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJiYW5rIiwicm9sZSI6IkFETUlOIiwiaWQiOjEsImV4cCI6MTY4OTU4MDEyMn0.grxC8vyCMKHNJoeCJrwg6HmDbUsj3Sq811A7XmeY1m9aCuG86CMGQa24DX0fHXocDjEof_FXiLHCJcwhM-654g";
+        String token = createToken(); //Bearer 제거해서 처리하기
+
+        String jwtToken = token.replace(jwtVo.TOKEN_PREFIX, "");
 
         //when
         LoginUser loginUser = JwtProcess.verify(jwtToken);

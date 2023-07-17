@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static shop.mtcoding.bank.dto.user.userReqDto.*;
 
 
-@Transactional //전체 테스트시에 롤백으로 독립적인 테스트를 위해
+//@Transactional //전체 테스트시에 롤백으로 독립적인 테스트를 위해
+@Sql("classpath:db/teardown.sql")//롤백이 아닌 truncate하기 위함 drop으로하면 create도 되기 떄문에 truncate
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)

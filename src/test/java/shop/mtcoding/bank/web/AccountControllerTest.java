@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +34,8 @@ import javax.validation.constraints.AssertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static shop.mtcoding.bank.dto.account.AccountReqDto.*;
 
-@Transactional
+//@Transactional
+@Sql("classpath:db/teardown.sql") //롤백이 아닌 truncate하기 위함 drop으로하면 create도 되기 떄문에 truncate
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
