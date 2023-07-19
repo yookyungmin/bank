@@ -98,11 +98,10 @@ public class AccountService {
                         () -> new CustomApiException("계좌를 찾을 수 없습니다."));
 
             //입금(해당 계좌 balance조정 - update문 더티체킹)
-
             depositAccountPS.deposit(accoutDepositReqDto.getAmount());
 
             //거래 내역 남기기
-        Transaction transaction = Transaction.builder()
+            Transaction transaction = Transaction.builder()
                 .depositAccount(depositAccountPS)
                 .withdrawAccount(null)
                 .depositAccountBalance(depositAccountPS.getBalance())
@@ -118,62 +117,5 @@ public class AccountService {
 
         return new AccountDepositRespDto(depositAccountPS, transactionPS);
     }
-
-    @Getter
-    @Setter
-    public static class AccountDepositRespDto{
-        private Long id; //계좌ID
-        private Long number; //계좌번호
-        private TransactionDto trasaction;  //dto 안에 엔티티 들어올수 없다, 순환참조 될수 있따
-
-        public AccountDepositRespDto(Account account, Transaction transaction) {
-            this.id = account.getId();
-            this.number = account.getNumber();
-            this.trasaction = new TransactionDto(transaction); //엔티티를 Dto로 변환
-        }
-
-        @Getter
-        @Setter
-        public class TransactionDto{
-            private Long id;
-            private String gubun;
-            private String sender;
-            private String receiver;
-            private Long amount;
-            private String tel;
-            private String createdAt;
-            @JsonIgnore //내 계좌가 아니기에 가려준다 json 응답시 테스트시에는 제거 하고 확인
-            private Long depositAccountBalance;
-
-
-            public TransactionDto(Transaction transaction) {
-                this.id = transaction.getId();
-                this.gubun = transaction.getGubun().getValue();
-                this.sender = transaction.getSender();
-                this.receiver = transaction.getReceiver();
-                this.amount = transaction.getAmount();
-                this.depositAccountBalance = transaction.getDepositAccountBalance();
-                this.tel = transaction.getTel();
-                this.createdAt = CustomDateUtil.toStringFormat(transaction.getCreatedAt());
-            }
-        }
-    }
-
-    @Getter
-    @Setter
-    public static class AccountDepositReqDto{
-        @NotNull
-        @Digits(integer = 4, fraction = 4)
-        private Long number;
-        @NotNull
-        private Long amount;
-        @NotEmpty
-        @Pattern(regexp = "^(DEPOSIT)$")  //
-        private String gubun;
-        @NotEmpty
-        @Pattern(regexp = "^[0-9]{11}")
-        private String tel;
-    }
-
 
 }
