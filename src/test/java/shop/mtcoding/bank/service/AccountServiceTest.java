@@ -105,9 +105,8 @@ public class AccountServiceTest extends DummyObject {
     @Test
     public void 게좌입금_test() {
 
-        //given
+        //given //계좌입금 DTO
         AccountDepositReqDto accountDepositReqDto = new AccountDepositReqDto();
-
         accountDepositReqDto.setNumber(1111L);
         accountDepositReqDto.setAmount(100L);
         accountDepositReqDto.setGubun("DEPOSIT");
@@ -136,5 +135,65 @@ public class AccountServiceTest extends DummyObject {
         //then
         assertThat(saarAccount1.getBalance()).isEqualTo(1100L);
         assertThat(accountDepositRespDto.getTrasaction().getDepositAccountBalance()).isEqualTo(1100L);
+    }
+
+
+    @Test
+    void 걔좌입금_test2() throws Exception{
+        //given
+        AccountDepositReqDto accountDepositReqDto = new AccountDepositReqDto();
+        accountDepositReqDto.setNumber(1111L);
+        accountDepositReqDto.setAmount(100L);
+        accountDepositReqDto.setGubun("DEPOSIT");
+        accountDepositReqDto.setTel("01011112222");
+
+        //stub1
+        User saar = newMockUser(1L, "saar", "쌀");  //실행됨
+        Account saarAccount1 = newMockAccount(1L, 1111L, 1000L, saar); //실행됨 -saarAccount(1000)
+        //입금 계좌 확인
+        when(accountRepository.findByNumber(any())).thenReturn(Optional.of(saarAccount1));//실행안됨 ->service 실행됨-> 1100원
+        //서비스가 실행되어야 실행되는 부분
+
+
+        //stub2 //독립적으로 테스트 하기 위해 유저를 한명 더 생성 사실상 같음
+        User saar2 = newMockUser(1L, "saar", "쌀");
+        Account saarAccount2 = newMockAccount(1L, 1111L, 1000L, saar2); //실행됨 -saarAccount(1000)
+        Transaction transaction = newMockDepositTransaction(1L, saarAccount2); //실행됨 ssarAccount1 -> 1100원, transaction -> 1100원
+        when(transactionRepository.save(any())).thenReturn(transaction);//실행안됨 ->
+        //서비스가 실행되어야 실행되는 부분
+
+
+
+        //when
+        AccountDepositRespDto accountDepositRespDto = accountService.계좌입금(accountDepositReqDto);
+        String responseBody = om.writeValueAsString(accountDepositRespDto);
+        System.out.println("테스트= "+responseBody);
+
+        //then
+        assertThat(saarAccount1.getBalance()).isEqualTo(1100L);
+
+    }
+
+    //서비스 테스트를 보여드린 것은 기술적인 테크닉
+    //진짜 서비스를 테스트 하고 싶으면, 내가 지금 무엇을 여기서 테스트 해야 하는지 명확히 구분(챔인부리)
+    //DTO를 만드는 책임0> 서비스에 있지만 (서비스에서 DTO 검증 안할떄 - Controller 테스트 해볼거시니까)
+    //DB 관련 된 것도 -> 서비스 것이 아니야 볼필요 없다
+    //db 관련 된것을 조회해했을떄, 그값을 통해서 어떤 비즈니스 로직이 흘러가는 것이 있으면 ->stub으로 정의해서 테스트 해보면 된다.
+
+    //DB 스텁, DB 스텁(가짜로 DB만들어서 deposit 검증,, 0원 검증)
+    @Test
+    public void 계좌입금_test3() {
+        //given
+        Account account = newMockAccount(1L, 1111L, 1000L, null);
+        Long amount = 100L;
+
+        //when
+        if(amount <= 0L){
+            throw new CustomApiException("0원 이하의 금액을 입금할 수 없습니다.");
+        }
+        account.deposit(100L);
+
+        //then
+        assertThat(account.getBalance()).isEqualTo(1100L);
     }
 }
