@@ -59,10 +59,10 @@ public class AccountController {
     }
 
     @PostMapping("/account/deposit") //인증이 필요없기에 /s제외
-    public ResponseEntity<?> depositAccount(@PathVariable @Valid AccountDepositReqDto accountDepositReqDto, BindingResult bindingResult){
+    public ResponseEntity<?> depositAccount(@RequestBody @Valid AccountDepositReqDto accountDepositReqDto, BindingResult bindingResult){
 
         AccountDepositRespDto accountDepositRespDto = accountService.계좌입금(accountDepositReqDto);
-        return new ResponseEntity<>(new ResponseDto<>(1, "계좌 삭제 완료", accountDepositRespDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ResponseDto<>(1, "계좌 입금 완료", accountDepositRespDto), HttpStatus.CREATED);
     }
 
 }

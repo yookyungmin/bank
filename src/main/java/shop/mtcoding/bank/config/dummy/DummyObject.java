@@ -22,7 +22,6 @@ public class DummyObject {
                 .id(id)
                 .withdrawAccount(null)
                 .depositAccount(account)
-                .withdrawAccount(null)
                 .witdrawAccountBalance(null)
                 .depositAccountBalance(account.getBalance())
                 .amount(100L)

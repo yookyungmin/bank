@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import shop.mtcoding.bank.config.dummy.DummyObject;
 import shop.mtcoding.bank.domain.account.Account;
@@ -96,6 +99,21 @@ public class AccountControllerTest extends DummyObject {
         resultActions.andExpect(status().isCreated());
     }
 
+    @WithUserDetails(value = "saar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void findUserAccount_test() throws Exception {
+        // given
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(get("/api/s/account/login-user"));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 = " + responseBody);
+
+        // then
+        resultActions.andExpect(status().isOk());
+    }
+    
 
     //테스트 시에는 insert 한것들이 전부 pc에 올라간다(영속화)
     //영속화 된것들을 초기화 해주는 것이 개발 모드와 동일 환경으로 테스트를 할수 있게 해준다.
@@ -131,8 +149,30 @@ public class AccountControllerTest extends DummyObject {
     //user를 Lazy로 설정 해놔서
     saarAccount.getUser.getId(); //상관이 없음
     saarAccount.getUser.getUsername(); //조회쿼리 발생 -> pc에 saar이 없으니까
-
-
-
      */
+
+
+    @Test
+    public void depositAccount_test() throws Exception {
+        //given
+        AccountDepositReqDto accountDepositReqDto = new AccountDepositReqDto();
+        accountDepositReqDto.setNumber(1111L);
+        accountDepositReqDto.setAmount(100L);
+        accountDepositReqDto.setGubun("DEPOSIT");
+        accountDepositReqDto.setTel("01011112222");
+
+        String requestBody = om.writeValueAsString(accountDepositReqDto);
+        System.out.println("테스트 = " + requestBody);
+        //리퀘스트 Dto 잘 만들어 졌는지 확인
+
+        //when
+        ResultActions resultActions = mvc.perform(post("/api/account/deposit").content(requestBody).contentType(MediaType.APPLICATION_JSON));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("responseBody = " + responseBody);
+
+        //tehn
+
+        resultActions.andExpect(status().isCreated());
+    }
+
 }

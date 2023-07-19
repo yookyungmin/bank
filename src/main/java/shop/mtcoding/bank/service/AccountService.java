@@ -102,14 +102,14 @@ public class AccountService {
 
             //거래 내역 남기기
             Transaction transaction = Transaction.builder()
-                .depositAccount(depositAccountPS)
                 .withdrawAccount(null)
-                .depositAccountBalance(depositAccountPS.getBalance())
+                .depositAccount(depositAccountPS)
                 .witdrawAccountBalance(null)
+                .depositAccountBalance(depositAccountPS.getBalance())
                 .amount(accoutDepositReqDto.getAmount())
                 .gubun(TransactionEnum.DEPOSIT)
                 .sender("ATM")
-                .receiver(depositAccountPS.getNumber()+"")
+                .receiver(accoutDepositReqDto.getNumber()+"")
                 .tel(accoutDepositReqDto.getTel())
                 .build();
 
