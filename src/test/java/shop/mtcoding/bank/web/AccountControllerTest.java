@@ -173,6 +173,5 @@ public class AccountControllerTest extends DummyObject {
         //tehn
 
         resultActions.andExpect(status().isCreated());
-
     }
 }
