@@ -174,5 +174,4 @@ public class AccountControllerTest extends DummyObject {
 
         resultActions.andExpect(status().isCreated());
     }
-
 }
