@@ -174,4 +174,27 @@ public class AccountControllerTest extends DummyObject {
 
         resultActions.andExpect(status().isCreated());
     }
+
+    @WithUserDetails(value = "saar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void withdrawAccount_test() throws Exception {
+        //given
+        AccountWithdrawReqDto accountWithdrawReqDto = new AccountWithdrawReqDto();
+        accountWithdrawReqDto.setNumber(1111L);
+        accountWithdrawReqDto.setAmount(100L);
+        accountWithdrawReqDto.setPassword(1234L);
+        accountWithdrawReqDto.setGubun("WITHDRAW");
+
+        String requestBody = om.writeValueAsString(accountWithdrawReqDto);
+        System.out.println("테스트 " + requestBody);
+
+
+        //when
+        ResultActions resultActions = mvc.perform(post("/api/s/account/withdraw").content(requestBody).contentType(MediaType.APPLICATION_JSON));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("리스폰스 테스트 = " + responseBody);
+
+        //then
+        resultActions.andExpect(status().isCreated());
+    }
 }
