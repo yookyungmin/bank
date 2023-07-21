@@ -22,8 +22,7 @@ import shop.mtcoding.bank.handler.ex.CustomApiException;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -225,5 +224,58 @@ public class AccountServiceTest extends DummyObject {
 
         //then
         assertThat(saarAccount.getBalance()).isEqualTo(900L);
+    }
+
+    @Test
+    void 계좌이체_test() {
+        //given
+        AccountTransferReqDto accountTransferReqDto = new AccountTransferReqDto();
+        accountTransferReqDto.setWithdrawNumber(1111L);
+        accountTransferReqDto.setDepositNumber(2222L);
+        accountTransferReqDto.setWithdrawPassword(1234L);
+        accountTransferReqDto.setAmount(100L);
+        accountTransferReqDto.setGubun("TRANSFER");
+
+        Long amount = 100L;
+        Long password = 1234L;
+        Long userId = 1L;
+
+        User saar = newMockUser(1L, "saar", "쌀");
+        User cos = newMockUser(2L, "cos", "코스");
+        Account withdrawAccount = newMockAccount(1L, 1111L, 1000L, saar);
+        Account depositAccount = newMockAccount(2L, 2222L, 1000L, cos);
+
+        //출금 계쫘와 입금계좌가 동일하면 안된다
+        if(accountTransferReqDto.getWithdrawNumber().longValue() == accountTransferReqDto.getDepositNumber().longValue()){
+            throw new CustomApiException("출금계좌와 입금계좌가 동일합니다");
+        }
+
+
+        //0원인지 체크
+        if(accountTransferReqDto.getAmount() <=0L){
+            throw new CustomApiException("0원 이하의 금액을 출금할 수 없습니다.");
+        }
+
+        //출금 소유자 확인
+        withdrawAccount.checkOwner(userId);
+
+//        //입금 소유자 확인
+//        depositAccount.checkOwner(depositAccount.getUser().getId());
+
+        //출금 계좌 비밀번호 확인
+        withdrawAccount.checkSamePassword(accountTransferReqDto.getWithdrawPassword());
+
+        //출금 계좌 잔액 확인하기
+        withdrawAccount.checkBalance(accountTransferReqDto.getAmount());
+
+        //이체하기
+        withdrawAccount.withdraw(accountTransferReqDto.getAmount());
+        depositAccount.deposit(accountTransferReqDto.getAmount());
+
+
+        //then
+        assertThat(withdrawAccount.getBalance()).isEqualTo(900L);
+        assertThat(depositAccount.getBalance()).isEqualTo(1100L);
+//      assertThat(depositAccount.getUser().getUsername()).isEqualTo("cos");
     }
 }
