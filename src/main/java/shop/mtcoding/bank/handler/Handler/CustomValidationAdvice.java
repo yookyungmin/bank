@@ -51,7 +51,6 @@ public class CustomValidationAdvice {
         /*postmapping, putmapping이 붙어있는 모든 컨트롤러가 동작 할때 BindingResult 매개변수가 있으면 if가 동작
           동작해도 에러가 있을때만 throw new를 날리고 에러가 없으면 proceed() 실행 정상적으로 실행하라는 메서드
         * */
-
 }
 
 // 유효성 검사라는건 바디 데이터가 있는곳에서만 하면 된다

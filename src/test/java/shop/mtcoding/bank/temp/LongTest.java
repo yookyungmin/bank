@@ -1,8 +1,31 @@
 package shop.mtcoding.bank.temp;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class LongTest {
+
+    @Test
+    public void long_test3() throws Exception{
+        long v1 = 1208L;
+        long v2 = 1208L;
+
+        Assertions.assertThat(v1).isEqualTo(v2);
+    }
+
+    @Test
+    public void long_test2() throws Exception{
+        // -127 ~ 127 범위까진 .longValue() 없이 비교가능
+        //given
+        Long v1 = 200L;
+        Long v2 = 200L;
+        //when
+        if(v1.longValue() ==  v2.longValue()){
+            System.out.println("테스트 : 같습니다.");
+        }
+
+        //then
+    }
 
     @Test
     public void long_test() throws Exception{

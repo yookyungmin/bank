@@ -63,7 +63,7 @@ public class Account {
         String testUserName = user.getUsername();
         System.out.println("계좌 소유자 이름 = " + testUserName);
         
-        if(user.getId() != userId){
+        if(user.getId().longValue() != userId.longValue()){
             throw new CustomApiException("계좌 소유자가 아닙니다.");
         }
     }
