@@ -99,7 +99,7 @@ public class SecurityConfig {
         configuration.addAllowedMethod("*"); //모든 메서드 get,post, put, delete(자바스크립트 요청 허용
         configuration.addAllowedOriginPattern("*"); //모든 ip주소 허용(프론트 엔드 ip만 허용 react, 핸드폰은 자바스크립트로 요청하는게 아니라 cors에 안걸림 )
         configuration.setAllowCredentials(true); //클라이언트에서 쿠키 요청 허용
-
+        configuration.addExposedHeader("Authorization"); //지우면 Authorization이 null로뜸 //브라우저에 있는 Authorization을 자바스크립트로 가져올수 있다/옛날엔 기본값
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration); //모든 주소 요청에, configuration 설정을 넣어주겠다.
 

@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import shop.mtcoding.bank.domain.user.User;
+import shop.mtcoding.bank.domain.user.UserRepository;
 import shop.mtcoding.bank.handler.ex.CustomApiException;
 
 import javax.persistence.*;
@@ -60,9 +61,9 @@ public class Account {
     public void checkOwner(Long userId){
         
         String testUserName = user.getUsername();
-        System.out.println("테스트 = " + testUserName);
+        System.out.println("계좌 소유자 이름 = " + testUserName);
         
-        if(user.getId() != userId){
+        if(user.getId().longValue() != userId.longValue()){
             throw new CustomApiException("계좌 소유자가 아닙니다.");
         }
     }

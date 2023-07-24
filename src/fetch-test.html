@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <h1>로그인 페이지</h1>
+    <hr>
+    <form>
+        <input type = "text" id="username"> </br>
+        <input type = "password" id="password"></br>
+        <button type="button" onclick="login">로그인</button>
+
+    </form>
+
+<script>
+    //async란 await 지점을 기억한 채로 login 함수의 스택을 빠져나와라
+    async function login(){
+        let userDto = {
+            username:document.querySelector("#username").value,
+            password:document.qeurySelector("#password").vlaue
+
+        }
+        console.log(userDto)
+        let userJson = JSON.Stringfy(userDto)
+        console.log(userJson)
+
+    //통신 (시간이 걸림)
+
+   let r1 = await fetch("http://localhost:8083/api/login", {
+        method:"post",
+        body:userjson,
+        headers:{
+                "content-Type":"application/json; charset=utf-8
+            }
+    });
+    console.log("Authorization", r1.headers.get("Authorization"));
+
+    //configuration.addExposedHeader("Authorization"); 활성화 되어있으면 아래 두개 코드처럼 활용 가능
+    let token = r1.headers.get("Authoriztion");
+    localStorage.setItem("token", token);
+
+    sessionStorage.setItem("token", token);
+
+    let r2 = await r1.json(); //json으로 파싱
+    console.log(r2)
+    }
+
+    //빠져나옴(async) 스택이 종료되니 let r1 위쪽은 날라가버림 -> login 함수 내부에 있는 값들을
+    //메모리에 복사해야함 (캡쳐링)
+</script>
+
+</body>
+</html>
