@@ -31,14 +31,14 @@ public class TransactionRepositoryImpl implements  Dao {
         sql += "select t from Transaction t ";
 
         if(gubun.equals("WITHDRAW")){
-            sql += "join fetch t.withdrawAccount wa ";
+            sql += "join fetch t.withdrawAccount wa ";  //fetch를 지우면 join 해서 데이터를 끌고왔지만 조회는 안한다.
             sql += "where t.withdrawAccount.id = :withdrawAccountId";
         }else if(gubun.equals("DEPOSIT")){
             sql += "join fetch t.depositAccount da ";
             sql += "where t.depositAccount.id = :depositAccountId";
         }else { //null
-            sql += "left join fetch t.withdrawAccount wa ";
-            sql += "left join fetch t.depositAccount da ";
+            sql += "left join fetch t.withdrawAccount wa ";  //left 뺴면 null값은 조회 안한다 1345
+            sql += "left join fetch t.depositAccount da "; // left 빼면 345가 나옴 두번쨰 테이블의 1번이 null이라서
             sql += "where t.withdrawAccount.id = :withdrawAccountId ";
             sql += "or ";
             sql += "t.depositAccount.id = :depositAccountId";
