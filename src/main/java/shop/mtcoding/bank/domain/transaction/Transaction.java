@@ -24,14 +24,17 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     @ManyToOne(fetch = FetchType.LAZY)
     private Account withdrawAccount;
 
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     @ManyToOne(fetch = FetchType.LAZY)
     private Account depositAccount;
 
     @Column(nullable = false)
     private  Long amount;
+
 
     private Long witdrawAccountBalance; //111 걔좌 1000원 // 500 // 200 계좌의 히스토리
     private Long depositAccountBalance;

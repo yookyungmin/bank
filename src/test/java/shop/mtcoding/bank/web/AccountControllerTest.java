@@ -25,6 +25,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import shop.mtcoding.bank.config.dummy.DummyObject;
 import shop.mtcoding.bank.domain.account.Account;
 import shop.mtcoding.bank.domain.account.AccountRepository;
+import shop.mtcoding.bank.domain.transaction.Transaction;
+import shop.mtcoding.bank.domain.transaction.TransactionRepository;
 import shop.mtcoding.bank.domain.user.User;
 import shop.mtcoding.bank.domain.user.UserRepository;
 import shop.mtcoding.bank.dto.account.AccountReqDto;
@@ -34,6 +36,7 @@ import javax.persistence.EntityManager;
 import javax.swing.undo.CannotUndoException;
 import javax.validation.constraints.AssertTrue;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static shop.mtcoding.bank.dto.account.AccountReqDto.*;
 
@@ -57,18 +60,14 @@ public class AccountControllerTest extends DummyObject {
     private AccountRepository accountRepository;
 
     @Autowired
+    private TransactionRepository transactionRepository;
+
+    @Autowired
     private EntityManager em;
 
     @BeforeEach
     public void setUp(){
-
-        User saar = userRepository.save(newUser("saar", "쌀"));
-        User cos = userRepository.save(newUser("cos", "코스"));
-
-        Account saarAccount = accountRepository.save(newAccount(1111L, saar));
-        Account cosAccount = accountRepository.save(newAccount(2222L, cos));
-        //삭제 테스트가 진행 될떈 persist context에 머ㅁ르지 않고 깨끗해야 함
-
+        dataSetting();
         em.clear(); //persist context 있는 것들 날리기
    }
 
@@ -218,5 +217,48 @@ public class AccountControllerTest extends DummyObject {
 
         //then
         resultActions.andExpect(status().isCreated());
+    }
+
+    @WithUserDetails(value = "saar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    void findDetailAccount_test() throws Exception{
+        //given
+        Long number = 1111L;
+        String page = "0";
+
+        ResultActions resultActions = mvc
+                .perform(get("/api/s/account/"+number).param("page", page));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 = " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.data.transactions[0].balance").value(900L));
+        resultActions.andExpect(jsonPath("$.data.transactions[1].balance").value(800L));
+        resultActions.andExpect(jsonPath("$.data.transactions[2].balance").value(700L));
+        resultActions.andExpect(jsonPath("$.data.transactions[3].balance").value(800L));
+
+    }
+
+    private void dataSetting() {
+        User saar = userRepository.save(newUser("saar", "쌀"));
+        User cos = userRepository.save(newUser("cos", "코스,"));
+        User love = userRepository.save(newUser("love", "러브"));
+        User admin = userRepository.save(newUser("admin", "관리자"));
+
+        Account saarAccount1 = accountRepository.save(newAccount(1111L, saar));
+        Account cosAccount = accountRepository.save(newAccount(2222L, cos));
+        Account loveAccount = accountRepository.save(newAccount(3333L, love));
+        Account saarAccount2 = accountRepository.save(newAccount(4444L, saar));
+
+        Transaction withdrawTransaction1 = transactionRepository
+                .save(newWithdrawTransaction(saarAccount1, accountRepository));
+        Transaction depositTransaction1 = transactionRepository
+                .save(newDepositTransaction(cosAccount, accountRepository));
+        Transaction transferTransaction1 = transactionRepository
+                .save(newTransferTransaction(saarAccount1, cosAccount, accountRepository));
+        Transaction transferTransaction2 = transactionRepository
+                .save(newTransferTransaction(saarAccount1, loveAccount, accountRepository));
+        Transaction transferTransaction3 = transactionRepository
+                .save(newTransferTransaction(cosAccount, saarAccount1, accountRepository));
     }
 }
