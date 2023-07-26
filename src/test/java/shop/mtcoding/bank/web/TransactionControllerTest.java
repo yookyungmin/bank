@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import shop.mtcoding.bank.config.dummy.DummyObject;
@@ -26,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 //롤백이 아닌 truncate하기 위함 drop으로하면 create도 되기 떄문에 truncate
+@Sql("classpath:db/teardown.sql")
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -62,6 +64,7 @@ public class TransactionControllerTest extends DummyObject {
         String gubun = "ALL";
         String page = "0";
 
+        //when
         ResultActions resultActions = mvc
                 .perform(get("/api/s/account/"+number+"/transaction").param("gubun", gubun).param("page", page));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();

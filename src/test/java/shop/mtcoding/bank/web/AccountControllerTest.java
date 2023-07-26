@@ -68,7 +68,6 @@ public class AccountControllerTest extends DummyObject {
     @BeforeEach
     public void setUp(){
         dataSetting();
-
         em.clear(); //persist context 있는 것들 날리기
    }
 
