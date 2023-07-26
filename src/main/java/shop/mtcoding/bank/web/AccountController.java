@@ -83,4 +83,13 @@ public class AccountController {
         return new ResponseEntity<>(new ResponseDto<>(1, "계좌 이체 완료", accountTransferRespDto), HttpStatus.CREATED);
     }
 
+    @GetMapping("/s/account/{number}")
+    public ResponseEntity<?> findDetatilAccount(@PathVariable Long number,
+                                                @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                @AuthenticationPrincipal LoginUser loginUser){
+
+        AccountDetailRespDto accountDetailRespDto = accountService.계좌상세보기(number, loginUser.getUser().getId(), page);
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "계좌상세보기 성공", accountDetailRespDto), HttpStatus.OK);
+    }
 }

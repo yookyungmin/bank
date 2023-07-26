@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class DummyObject {
 
 
+    //출금
     protected Transaction newWithdrawTransaction(Account account, AccountRepository accountRepository){
         account.withdraw(100L); // 1000원이 있다면 900원이 됨
         //서비스레이어에서 값을 바꾸는게 아니기 떄문에 더티체킹이 안됨 직접 바꿔주어ㅑ함
@@ -32,7 +33,6 @@ public class DummyObject {
                 .gubun(TransactionEnum.WITHDRAW)
                 .sender(account.getNumber() + "")
                 .receiver("ATN")
-                .tel("01022227777")
                 .build();
 
         return transaction;
@@ -54,16 +54,16 @@ public class DummyObject {
                 .witdrawAccountBalance(withdrawAccount.getBalance())
                 .depositAccountBalance(depositAccount.getBalance())
                 .amount(100L)
-                .gubun(TransactionEnum.WITHDRAW)
+                .gubun(TransactionEnum.TRANSFER)
                 .sender(withdrawAccount.getNumber() + "")
                 .receiver(depositAccount.getNumber() + "")
-                .tel("01022227777")
                 .build();
 
         return transaction;
 
     }
 
+    //입금
     protected Transaction newDepositTransaction(Account account, AccountRepository accountRepository){
         account.deposit(100L); // 1000원이 있다면 900원이 됨
         //서비스레이어에서 값을 바꾸는게 아니기 떄문에 더티체킹이 안됨 직접 바꿔주어ㅑ함

@@ -36,9 +36,9 @@ public class TransactionRepositoryImpl implements  Dao {
         }else if(gubun.equals("DEPOSIT")){
             sql += "join fetch t.depositAccount da ";
             sql += "where t.depositAccount.id = :depositAccountId";
-        }else { //null
-            sql += "left join fetch t.withdrawAccount wa ";  //left 뺴면 null값은 조회 안한다 1345
-            sql += "left join fetch t.depositAccount da "; // left 빼면 345가 나옴 두번쨰 테이블의 1번이 null이라서
+        }else { //gubun = all
+            sql += "left join t.withdrawAccount wa ";  //left 뺴면 null값은 조회 안한다 1345
+            sql += "left join t.depositAccount da "; // left 빼면 345가 나옴 두번쨰 테이블의 1번이 null이라서
             sql += "where t.withdrawAccount.id = :withdrawAccountId ";
             sql += "or ";
             sql += "t.depositAccount.id = :depositAccountId";
