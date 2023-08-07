@@ -47,7 +47,6 @@ public class UserServiceTest extends DummyObject {
         when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
         //when(userRepository.findbyUsername(any())).thenReturn(Optional.of(new User()));
 
-
         //stub 2
         User saar = newMockUser(1L, "saar", "쌀");
         when(userRepository.save(any())).thenReturn(saar);

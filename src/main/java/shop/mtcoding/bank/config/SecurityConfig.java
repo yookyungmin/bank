@@ -37,7 +37,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    //추후 jwt 필터 등록 필요
+    //추후 jwt 필터 등록
     public class CustomSecurityFilterManager extends AbstractHttpConfigurer<CustomSecurityFilterManager, HttpSecurity>{
         @Override
         public void configure(HttpSecurity builder) throws Exception {
@@ -63,7 +63,7 @@ public class SecurityConfig {
         //react, 앱 같은데서 요청을 받을거라 form로그인 방식 x
         http.formLogin().disable(); //비허용
 
-        //브라우저가 팝업창을 이용해서 사용자 인증을 진행한다.
+        //브라우저가 팝업창을 이용해서 사용자 인증을 진행한다. HTTP 기본인증 비활성화
         http.httpBasic().disable(); //비허용
 
         // 필터 적용

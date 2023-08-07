@@ -250,7 +250,6 @@ public class AccountServiceTest extends DummyObject {
             throw new CustomApiException("출금계좌와 입금계좌가 동일합니다");
         }
 
-
         //0원인지 체크
         if(accountTransferReqDto.getAmount() <=0L){
             throw new CustomApiException("0원 이하의 금액을 출금할 수 없습니다.");
@@ -271,7 +270,6 @@ public class AccountServiceTest extends DummyObject {
         //이체하기
         withdrawAccount.withdraw(accountTransferReqDto.getAmount());
         depositAccount.deposit(accountTransferReqDto.getAmount());
-
 
         //then
         assertThat(withdrawAccount.getBalance()).isEqualTo(900L);
