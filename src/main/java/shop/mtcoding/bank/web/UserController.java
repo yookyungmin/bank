@@ -22,8 +22,6 @@ import static shop.mtcoding.bank.dto.user.userReqDto.*;
 public class UserController {
     private final UserService userService;
 
-
-    //
     @PostMapping("/join") // 시큐리티 인증이 필요없는 주소
     public ResponseEntity<?> join(@RequestBody @Valid JoinReqDto joinReqDto, BindingResult bindingResult){
         //joinReqDto 통과못하면 bindingResult에 담긴다.
