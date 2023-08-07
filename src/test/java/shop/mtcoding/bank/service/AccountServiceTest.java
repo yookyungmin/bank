@@ -272,7 +272,6 @@ public class AccountServiceTest extends DummyObject {
         withdrawAccount.withdraw(accountTransferReqDto.getAmount());
         depositAccount.deposit(accountTransferReqDto.getAmount());
 
-
         //then
         assertThat(withdrawAccount.getBalance()).isEqualTo(900L);
         assertThat(depositAccount.getBalance()).isEqualTo(1100L);
