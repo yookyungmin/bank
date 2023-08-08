@@ -19,7 +19,7 @@ public class LoginService implements UserDetailsService {
 
     //시큐리티로 로그인이 될때 시큐리티가 loadUserByUsername()을 실행해서 username체크
     //체크해서 없으면 오류, 있으면 정상적으로 시큐리티 컨텍스트 내부 세션에 로그인 된 세션이 만들어진다.
-    @Override
+    @Override //String username 매개변수는 인풋태그 name이랑 동일한 이름을 가져야 함
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException { //로그인 될떄 세션 만들어주는과정
         User userPS = userRepository.findByUsername(username).orElseThrow(
                 () -> new InternalAuthenticationServiceException("인증실패")

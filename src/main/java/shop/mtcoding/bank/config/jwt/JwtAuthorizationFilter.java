@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 //모든 주소에서 동작함(토큰검증) 인가 필터
+//만약에 권한이나 인증이 필요한 주소가 아니면 이주소를 안탄다.
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager) {
