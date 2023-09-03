@@ -3,6 +3,7 @@ package shop.mtcoding.bank.domain.transaction;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor //스프링이 User 객체 생성 할떄 빈생성자로 new를 하기 떄문에
 @Getter
+@Setter
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "transaction_tb") //어떤 계좌가 어떤 계좌에 이체 했는지 정보
 @Entity

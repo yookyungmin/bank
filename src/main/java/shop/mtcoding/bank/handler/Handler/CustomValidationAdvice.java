@@ -1,6 +1,7 @@
 package shop.mtcoding.bank.handler.Handler;
 
 
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -13,6 +14,7 @@ import org.springframework.validation.FieldError;
 import shop.mtcoding.bank.dto.ResponseDto;
 import shop.mtcoding.bank.handler.ex.CustomValidationException;
 
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,20 +23,21 @@ import java.util.Map;
 public class CustomValidationAdvice {
 
         @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping)")
-        public void postMapping(){}
+        public void postMapping(){} //기능 적용할 위치
 
         @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping)")
         public void putMapping(){}
 
-
-    //postMapping, putMapping 두군데다 하겠따
-        @Around("postMapping() || putMapping()") //joinpoint 의 전후 제어
+          //postMapping, putMapping 두군데다 하겠따
+        @Around("postMapping() || putMapping()") //joinpoint 의 전후 제어, joinpoint = 메서드들
         public Object validationAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
             Object[] args = proceedingJoinPoint.getArgs(); //joinpoint의 매개변수들, joinpoint는 메서드들
+            //메서드의 파라미터에 접근이 가능하다 //@Around에서만 지원됨, ProceedingJoinPoint를 사용해야 proceed() 사용 가능
 
+            //joinpoint 매개변수들을 for문돌려서
             for(Object arg : args){
                 if(arg instanceof BindingResult){ //BindingResult를 상속받거나 인스턴스면
-                    BindingResult bindingResult = (BindingResult) arg; //형변환
+                    BindingResult bindingResult = (BindingResult) arg; //다운 캐스팅
 
                     if(bindingResult.hasErrors()){ //bindingresult에 에러가 있으면
                         Map<String, String> errorMap = new HashMap<>();

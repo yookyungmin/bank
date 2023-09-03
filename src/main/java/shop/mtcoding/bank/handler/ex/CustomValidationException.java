@@ -5,13 +5,13 @@ import lombok.Getter;
 import java.util.Map;
 
 
-@Getter
+@Getter //리턴하기위해 게터
 public class CustomValidationException extends RuntimeException {
 
-    private Map<String, String> erroMap;
+    private Map<String, String> errorMap;
 
-    public CustomValidationException(String message, Map<String, String> erroMap) {
+    public CustomValidationException(String message, Map<String, String> errorMap) {
         super(message);
-        this.erroMap = erroMap;
+        this.errorMap = errorMap;
     }
 }

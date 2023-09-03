@@ -25,6 +25,17 @@ import java.io.IOException;
 import static shop.mtcoding.bank.dto.user.UserRespDto.*;
 import static shop.mtcoding.bank.dto.user.userReqDto.*;
 
+
+//스프링 시큐리티에서 UsernamePasswordAuthenticationFilter 가 있음
+//login 요청해서 username, passwrod 전송하면(post) UsernamePasswordAuthenticationFilter동작
+//SecurityConfigure에서 formLogin.disabled를 해놨기 때문에 작동을 안함
+//그래서 builder.addFilter(new JwtAuthenticationFilter(authenticationManager)); 사용
+
+//username password를 받아서
+//2. 정상인지 로그인시도를 해보는것, authenticationManager 로 로그인 시도를 하면
+//LoginService UserDetailService가가 호출되어 loadUserByUsername() 함수 실행 그후에
+//userDetails를 세션에담아서(권한관리를 위함)
+//jwt 토큰을 만들어서 응답
 //인증필터  /api/login
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -39,6 +50,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     //post : /login 동작  //로그인의 데이터를 받아 강제 로그인진행
+    //login 요청을 하면 로그인 시도를 위해 실행되는 함수
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
