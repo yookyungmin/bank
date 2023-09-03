@@ -27,7 +27,7 @@ public class CustomExceptionHandler {
     public ResponseEntity<?> validationException(CustomValidationException e){
         log.error(e.getMessage());
 
-        return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), e.getErroMap()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), e.getErrorMap()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(CustomForbiddenException.class  )

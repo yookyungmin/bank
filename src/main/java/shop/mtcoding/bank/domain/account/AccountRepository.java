@@ -1,8 +1,10 @@
 package shop.mtcoding.bank.domain.account;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 
+import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +20,10 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     //acoount 조회시 user를 계쏙 가져오게 될 경우에 아래 쿼리를 날리면 select 할떄 lazy 한걸 미리  당겨온다
     //@Query("SELECT ac FROM Account ac JOIN FETCH ac.user u WHERE ac.number = :number")
     Optional<Account> findByNumber(Long number);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select ac from Account ac where ac.number = :number")
+    Optional<Account> findByNumberWithPessimisticLock(Long number);
 
     //jpa query method
     //select * from account where user_id = :id

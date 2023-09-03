@@ -6,9 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
+import shop.mtcoding.bank.config.QueryDSLConfig;
 import shop.mtcoding.bank.config.dummy.DummyObject;
 import shop.mtcoding.bank.domain.account.Account;
 import shop.mtcoding.bank.domain.account.AccountRepository;
@@ -23,6 +25,7 @@ import java.util.List;
 //@Sql("classpath:db/teardown.sql")
 @ActiveProfiles("test")
 @DataJpaTest //DB관련된 BEAN이 올라온다
+@Import(QueryDSLConfig.class)
 public class TransactionRepositoryImplTest extends DummyObject {
 
     @Autowired
@@ -96,7 +99,7 @@ public class TransactionRepositoryImplTest extends DummyObject {
 
     private void dataSetting() {
         User saar = userRepository.save(newUser("saar", "쌀"));
-        User cos = userRepository.save(newUser("cos", "코스,"));
+        User cos = userRepository.save(newUser("cos", "코스"));
         User love = userRepository.save(newUser("love", "러브"));
         User admin = userRepository.save(newUser("admin", "관리자"));
 

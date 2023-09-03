@@ -1,6 +1,7 @@
 package shop.mtcoding.bank.service;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,10 @@ import shop.mtcoding.bank.dto.account.AccountRespDto;
 import shop.mtcoding.bank.handler.ex.CustomApiException;
 
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -138,7 +143,7 @@ public class AccountServiceTest extends DummyObject {
 
 
     @Test
-    void 걔좌입금_test2() throws Exception{
+    void 계좌입금_test2() throws Exception{
         //given
         AccountDepositReqDto accountDepositReqDto = new AccountDepositReqDto();
         accountDepositReqDto.setNumber(1111L);
@@ -150,7 +155,7 @@ public class AccountServiceTest extends DummyObject {
         User saar = newMockUser(1L, "saar", "쌀");  //실행됨
         Account saarAccount1 = newMockAccount(1L, 1111L, 1000L, saar); //실행됨 -saarAccount(1000)
         //입금 계좌 확인
-        when(accountRepository.findByNumber(any())).thenReturn(Optional.of(saarAccount1));//실행안됨 ->service 실행됨-> 1100원
+        when(accountRepository.findByNumberWithPessimisticLock(any())).thenReturn(Optional.of(saarAccount1));//실행안됨 ->service 실행됨-> 1100원
         //서비스가 실행되어야 실행되는 부분
 
 

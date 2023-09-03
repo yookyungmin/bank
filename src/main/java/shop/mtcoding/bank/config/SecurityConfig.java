@@ -55,7 +55,7 @@ public class SecurityConfig {
 
         log.debug("디버그 : filterChain 빈등록");
         http.headers().frameOptions().disable(); //iframe 허용 안함
-        http.csrf().disable(); // enable이면 post 맨 적용안함(메타코딩 유튜브 시큐리티 강의)
+        http.csrf().disable(); // enable이면 post 맨 적용안함(메타코딩 유튜브 시큐리티 강의) 인증된 사용자가 사이트에 특정요청을 보내 사이트간 위조
         http.cors().configurationSource(configurationSource()); //자바스크립트에서 요청하는걸 막겠따는건데 허용
 
         //jsessionId를 서버쪽에서 관리안하겠다는 뜻
@@ -78,7 +78,7 @@ public class SecurityConfig {
         //헤더에 jwt토큰이 없어도 dofilter를 통해서 컨트롤러까지 갔다가 해당 코드가 낚아챔
         //postman에서 에러 나오는걸 통제하기위해 AuthenticationEntryPoint의 제어권을 뺏는다
 
-        //권한 실패
+        //권한 실패 //Exception 가로채기
         http.exceptionHandling().accessDeniedHandler((request, response, e)->{
             CustomReponseUtil.fail(response, "권한이 없습니다", HttpStatus.FORBIDDEN);
         });
