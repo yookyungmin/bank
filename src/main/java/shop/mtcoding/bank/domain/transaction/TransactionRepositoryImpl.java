@@ -1,5 +1,7 @@
 package shop.mtcoding.bank.domain.transaction;
 
+
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -7,8 +9,9 @@ import org.springframework.data.repository.query.Param;
 import shop.mtcoding.bank.domain.account.QAccount;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import java.util.List;
+
+import static shop.mtcoding.bank.domain.transaction.QTransaction.transaction;
 
 interface Dao{
     List<Transaction> findTransactionList(@Param("accountId") Long accountId, @Param("gubun") String gubun,
@@ -67,33 +70,92 @@ public class TransactionRepositoryImpl implements  Dao {
 //        return query.getResultList();
 //    }
 
+//    public List<Transaction> findTransactionList(Long accountId, String gubun, Integer page){
+//
+//            JPAQuery<Transaction> query = jpaQueryFactory.selectFrom(transaction);
+//
+//        return  query
+//
+//                     .where(gubunCheck(gubun, accountId))
+//                     .limit(3).offset(page*3)
+//                     .fetch();
+//
+////        //join
+////        query.leftJoin(transaction.withdrawAccount).leftJoin(transaction.depositAccount);
+////
+////        //where
+////        query.where(gubunCheck(gubun, accountId));
+////
+////        //paging
+////        query.limit(3).offset(page * 3);
+//
+////        return query.fetch();
+//    }
+//
+//    private BooleanExpression gubunCheck(String gubun, Long accountId){
+//        if (!StringUtils.hasText(gubun)){
+//            return
+//                    transaction.withdrawAccount.id.eq(accountId).or(transaction.depositAccount.id.eq(accountId));
+//
+//        }else if(TransactionEnum.valueOf(gubun) == TransactionEnum.DEPOSIT){
+//            return
+//                    transaction.depositAccount.id.eq((accountId));
+//        }else if(TransactionEnum.valueOf(gubun) == TransactionEnum.WITHDRAW){
+//            return
+//                    transaction.withdrawAccount.id.eq(accountId);
+//        }else {
+//            return null;
+//        }
+//    }
 
-
+//        @Override
+//    public List<Transaction> findTransactionList(Long accountId, String gubun, Integer page) {
+//
+//        JPAQuery<Transaction> query = jpaQueryFactory.selectFrom(transaction);
+//
+//        if ("WITHDRAW".equals(gubun)) {
+//                query
+//                    .innerJoin(transaction.withdrawAccount, QAccount.account)
+//                    .fetchJoin()
+//                    .where(transaction.withdrawAccount.id.eq(accountId));
+//        } else if ("DEPOSIT".equals(gubun)) {
+//                 query
+//                     .innerJoin(transaction.depositAccount, QAccount.account)
+//                     .fetchJoin()
+//                     .where(transaction.depositAccount.id.eq(accountId));
+//        } else { // gubun = alls
+//                query
+//                    .leftJoin(transaction.withdrawAccount, QAccount.account)
+//                    .leftJoin(transaction.depositAccount, QAccount.account)
+//                    .where(transaction.withdrawAccount.id.eq(accountId)
+//                            .or(transaction.depositAccount.id.eq(accountId)));
+//        }
+//
+//        return query
+//                .offset(page * 5)
+//                .limit(5)
+//                .fetch();
+//    }
     @Override
     public List<Transaction> findTransactionList(Long accountId, String gubun, Integer page) {
-        QTransaction t = QTransaction.transaction;
-//        QAccount withdrawAccount = QAccount.account;
-//        QAccount depositAccount = QAccount.account;
 
-        JPAQuery<Transaction> query = jpaQueryFactory.selectFrom(t);
-
+        JPAQuery<Transaction> query = jpaQueryFactory.selectFrom(transaction);
 
         if ("WITHDRAW".equals(gubun)) {
-            query = query
-                    .innerJoin(t.withdrawAccount, QAccount.account)
+            query
+                    .innerJoin(transaction.withdrawAccount, QAccount.account)
                     .fetchJoin()
-                    .where(t.withdrawAccount.id.eq(accountId));
+                    .where(withDrawEq(accountId));
         } else if ("DEPOSIT".equals(gubun)) {
-            query = query
-                    .innerJoin(t.depositAccount, QAccount.account)
+            query
+                    .innerJoin(transaction.depositAccount, QAccount.account)
                     .fetchJoin()
-                    .where(t.depositAccount.id.eq(accountId));
+                    .where(depositEq(accountId));
         } else { // gubun = all
-            query = query
-                    .leftJoin(t.withdrawAccount, QAccount.account)
-                    .leftJoin(t.depositAccount, QAccount.account)
-                    .where(t.withdrawAccount.id.eq(accountId)
-                            .or(t.depositAccount.id.eq(accountId)));
+            query
+                    .leftJoin(transaction.withdrawAccount, QAccount.account)
+                    .leftJoin(transaction.depositAccount, QAccount.account)
+                    .where(allEq(accountId));
         }
 
         return query
@@ -101,60 +163,16 @@ public class TransactionRepositoryImpl implements  Dao {
                 .limit(5)
                 .fetch();
     }
+    private BooleanExpression withDrawEq(Long accountId) {
+        return accountId != null ? transaction.withdrawAccount.id.eq(accountId): null;
+    }
 
+    private BooleanExpression depositEq(Long accountId) {
+        return accountId != null ? transaction.depositAccount.id.eq(accountId): null;
+    }
 
-//    @Override
-//    public List<Transaction> findTransactionList(Long accountId, String gubun, Integer page) {
-//        QTransaction t = QTransaction.transaction;
-//        JPAQuery<Transaction> query = jpaQueryFactory.selectFrom(t);
-//
-//        if ("WITHDRAW".equals(gubun)) {
-//            query.innerJoin(t.withdrawAccount, QTransaction.transaction.withdrawAccount)
-//                    .where(t.withdrawAccount.id.eq(accountId));
-//        } else if ("DEPOSIT".equals(gubun)) {
-//            query.innerJoin(t.depositAccount, QDepositAccount.depositAccount)
-//                    .where(t.depositAccount.id.eq(accountId));
-//        } else { // gubun = all
-//            query.leftJoin(t.withdrawAccount, QWithdrawAccount.withdrawAccount)
-//                    .leftJoin(t.depositAccount, QDepositAccount.depositAccount)
-//                    .where(t.withdrawAccount.id.eq(accountId)
-//                            .or(t.depositAccount.id.eq(accountId)));
-//        }
-//
-//        return query.offset(page * 5)
-//                .limit(5)
-//                .fetch();
-//    }
-
-//    @Override
-//    public List<Transaction> findTransactionList(Long accountId, String gubun, Integer page) {
-//        QTransaction t = QTransaction.transaction;
-//        QAccount withdrawAccount = QAccount.account;
-//        QAccount depositAccount = QAccount.account;
-//
-//        JPAQuery<Transaction> query = jpaQueryFactory.selectFrom(t);
-//
-//        if ("WITHDRAW".equals(gubun)) {
-//            query.innerJoin(t.withdrawAccount, withdrawAccount)
-//                    .fetchJoin()
-//                    .where(t.withdrawAccount.id.eq(accountId));
-//        } else if ("DEPOSIT".equals(gubun)) {
-//            query.innerJoin(t.depositAccount, depositAccount)
-//                    .fetchJoin()
-//                    .where(t.depositAccount.id.eq(accountId));
-//        } else { // gubun = all
-//            query.leftJoin(t.withdrawAccount, withdrawAccount)
-//                    .fetchJoin()
-//                    .leftJoin(t.depositAccount, depositAccount)
-//                    .fetchJoin()
-//                    .where(t.withdrawAccount.id.eq(accountId)
-//                            .or(t.depositAccount.id.eq(accountId)));
-//        }
-//
-//        return query.offset(page * 5)
-//                .limit(5)
-//                .fetch();
-//    }
-
+    private BooleanExpression allEq(Long accountId) {
+        return accountId != null ? transaction.withdrawAccount.id.eq(accountId).or(transaction.depositAccount.id.eq(accountId)): null;
+    }
 
 }
